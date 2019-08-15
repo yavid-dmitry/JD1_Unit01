@@ -12,7 +12,7 @@ public class Task04 {
 		int b = 10;
 		int c = 4;
 		
-		double z = ( (a - 3 ) * b / 2) + c;
+		double z = ( (double) (a - 3 ) * b / 2) + c;
 		
 		System.out.println(z);
 		

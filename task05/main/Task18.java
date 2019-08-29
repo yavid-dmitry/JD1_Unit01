@@ -1,5 +1,7 @@
 package by.htp.task05.main;
 
+import java.util.Random;
+
 import by.htp.task04.main.Method;
 
 /*
@@ -9,13 +11,18 @@ import by.htp.task04.main.Method;
  *	которая разгадывает код замка при условии, что два кубика уже вставлены в ячейки.
  */
 public class Task18 {
+	static Random rand = new Random();
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		// Захардкодили начальные условия
-		int[] aStart = { 0, 0, 1, 0, 0, 1, 0, 0, 0, 0 };
+		// Выбрали случайные начальные условия
+		int[] aStart = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		int n[][] = getLockedNumber();
+		aStart[n[0][0]] = n[0][1];
+		aStart[n[1][0]] = n[1][1];
 		System.out.println("Изначальные установленные ячейки");
 		Method.print(aStart);
+
 		// Создали массив из подбираемых индексов
 		int[] k = new int[8];
 		int count = 0;
@@ -25,10 +32,13 @@ public class Task18 {
 				count++;
 			}
 		}
-		System.out.println("Список подбираемых ячеек(пропущены заранее установленные индексы)");
-		Method.print(k);
-		System.out.println("Один из вариантов решения");
-		Method.print(getKey(aStart, k));
+		int[] a = getKey(aStart, k);
+		if (a[0] != 0) {
+			System.out.println("Решение");
+			Method.print(a);
+		} else {
+			System.out.println("Для выбранных положений кубиков нет решения");
+		}
 
 	}
 
@@ -50,10 +60,9 @@ public class Task18 {
 									a[k[6]] = a6;
 									for (int a7 = 1; a7 <= 6; a7++) {
 										a[k[7]] = a7;
-										for (int i = 1; i <= 7; i++) {
-											if (summOfThree(a, i) == 10) {
-												return a;
-											}
+
+										if (checkSolution(a)) {
+											return a;
 
 										}
 									}
@@ -68,11 +77,25 @@ public class Task18 {
 		return b;
 	}
 
-	public static int summOfThree(int[] a, int index) {
-		int sum = 0;
-		if (a.length - 3 > index) {
-			sum = a[index] + a[index + 1] + a[index + 2];
+	public static boolean checkSolution(int[] a) {
+		for (int i = 0; i < a.length - 2; i++) {
+			if (a[i] + a[i + 1] + a[i + 2] != 10) {
+				return false;
+			}
 		}
-		return sum;
+		return true;
+	}
+
+	public static int[][] getLockedNumber() {
+		int[][] n = new int[2][2];
+		// Первый столбец - индекс заблокированного замка, второй столбец - значение
+		// этого замка.
+		n[0][0] = rand.nextInt(10);
+		do {
+			n[1][0] = rand.nextInt(10);
+		} while (n[0][0] == n[1][0]);
+		n[0][1] = rand.nextInt(6) + 1;
+		n[1][1] = rand.nextInt(6) + 1;
+		return n;
 	}
 }
